@@ -1,0 +1,38 @@
+package com.portfolio.repository;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.portfolio.entity.TStock;
+
+@Repository
+public interface TStockRepository extends JpaRepository<TStock, Integer> {
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE TStock SET name=?2, symbol=?3, classify_id=?4 WHERE id=?1", nativeQuery = true)
+	public void update(@Param("id") Integer id, 
+						@Param("name") String name, 
+						@Param("symbol") String symbol,
+					    @Param("classify_id") Integer classify_id);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE TStock WHERE id=?1", nativeQuery = true)
+	public void updatePrice(@Param("id") Integer id, 
+							 @Param("changePrice") BigDecimal changePrice, 
+	    					 @Param("changeInPercent") BigDecimal changeInPercent,
+	    					 @Param("preClosed") BigDecimal preClosed, 
+	    					 @Param("price") BigDecimal price, 
+	    					 @Param("transactionDate") Date transactionDate, 
+	    					 @Param("volumn") Long volumn);
+
+}
